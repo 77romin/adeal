@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">상권 공간 검색 파이프라인</title>
+  <desc id="description">관광지 선택부터 지역별 CSV 지연 로딩, 공간 인덱스 후보 검색, Haversine 거리 검증, Swing 화면 갱신까지의 상권 검색 처리 과정을 나타낸다.</desc>
+  <defs>
+    <style>
+      text { font-family: Pretendard, "Noto Sans KR", "Malgun Gothic", Arial, sans-serif; fill: #172B3A; }
+      .header-title { font-size: 36px; font-weight: 700; fill: #FFFFFF; letter-spacing: -0.6px; }
+      .header-subtitle { font-size: 18px; fill: #C5D4E3; }
+      .header-tag { font-size: 13px; font-weight: 700; fill: #D7E5F2; letter-spacing: 1.4px; }
+      .step-number { font-size: 19px; font-weight: 800; fill: #FFFFFF; }
+      .step-title { font-size: 20px; font-weight: 700; letter-spacing: -0.25px; }
+      .step-body { font-size: 14px; fill: #526879; }
+      .metric { font-size: 15px; font-weight: 700; fill: #1F5D87; }
+      .section-title { font-size: 21px; font-weight: 700; fill: #17324D; }
+      .loop-title { font-size: 17px; font-weight: 700; }
+      .loop-body { font-size: 13px; fill: #526879; }
+      .callout-title { font-size: 17px; font-weight: 700; }
+      .callout-body { font-size: 13px; fill: #526879; }
+      .caption { font-size: 15px; font-weight: 600; fill: #617384; }
+      .flow { fill: none; stroke: #50677A; stroke-width: 2.5; marker-end: url(#arrow); }
+      .loop { fill: none; stroke: #6750A4; stroke-width: 2.2; marker-end: url(#arrowPurple); }
+      .thread { fill: none; stroke: #278A58; stroke-width: 2.2; stroke-dasharray: 8 6; marker-end: url(#arrowGreen); }
+      .shadow { filter: url(#shadow); }
+    </style>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="145%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#102A43" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#50677A"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6750A4"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#278A58"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#F7F9FC"/>
+  <rect width="1600" height="132" fill="#0B2239"/>
+  <rect x="0" y="128" width="1600" height="4" fill="#2F80ED"/>
+  <text x="64" y="63" class="header-title">상권 공간 검색 파이프라인</text>
+  <text x="64" y="101" class="header-subtitle">전국 단위 원본에서 관광지 주변의 정확한 업소만 선별하는 과정</text>
+  <rect x="1328" y="45" width="208" height="42" rx="21" fill="#173A5E" stroke="#4D7194"/>
+  <text x="1432" y="71" class="header-tag" text-anchor="middle">SEARCH PIPELINE</text>
+
+  <!-- 6단계 처리 흐름 -->
+  <text x="64" y="182" class="section-title">핵심 처리 흐름</text>
+  <line x1="64" y1="198" x2="1536" y2="198" stroke="#D5DEE6" stroke-width="1.5"/>
+
+  <rect x="64" y="226" width="214" height="286" rx="18" fill="#EEF5FD" stroke="#8CB8E8" stroke-width="1.6" class="shadow"/>
+  <circle cx="98" cy="262" r="20" fill="#2F80ED"/>
+  <text x="98" y="269" class="step-number" text-anchor="middle">1</text>
+  <text x="128" y="269" class="step-title">관광지 선택</text>
+  <line x1="86" y1="292" x2="256" y2="292" stroke="#C5D8EC"/>
+  <text x="86" y="327" class="step-body">현재 화면의 TripDto에서</text>
+  <text x="86" y="351" class="step-body">위도·경도와 주소를 확보</text>
+  <rect x="86" y="390" width="170" height="74" rx="10" fill="#FFFFFF" stroke="#B7CEE5"/>
+  <text x="171" y="420" class="metric" text-anchor="middle">입력 좌표 검증</text>
+  <text x="171" y="447" class="step-body" text-anchor="middle">유효 범위 확인</text>
+
+  <rect x="314" y="226" width="214" height="286" rx="18" fill="#F5F1FC" stroke="#B7A5DE" stroke-width="1.6" class="shadow"/>
+  <circle cx="348" cy="262" r="20" fill="#6750A4"/>
+  <text x="348" y="269" class="step-number" text-anchor="middle">2</text>
+  <text x="378" y="269" class="step-title">지역 식별</text>
+  <line x1="336" y1="292" x2="506" y2="292" stroke="#D4C9EA"/>
+  <text x="336" y="327" class="step-body">도로명·지번주소에서</text>
+  <text x="336" y="351" class="step-body">17개 시도 중 대상 결정</text>
+  <rect x="336" y="390" width="170" height="74" rx="10" fill="#FFFFFF" stroke="#CABDE4"/>
+  <text x="421" y="420" class="metric" text-anchor="middle" fill="#6750A4">RegionMatcher</text>
+  <text x="421" y="447" class="step-body" text-anchor="middle">주소 표기 정규화</text>
+
+  <rect x="564" y="226" width="214" height="286" rx="18" fill="#EFF8F3" stroke="#91C8A8" stroke-width="1.6" class="shadow"/>
+  <circle cx="598" cy="262" r="20" fill="#278A58"/>
+  <text x="598" y="269" class="step-number" text-anchor="middle">3</text>
+  <text x="628" y="269" class="step-title">지역 데이터 준비</text>
+  <line x1="586" y1="292" x2="756" y2="292" stroke="#C1DDCD"/>
+  <text x="586" y="327" class="step-body">대상 지역 CSV만 최초 1회</text>
+  <text x="586" y="351" class="step-body">읽고 메모리에 캐시</text>
+  <rect x="586" y="390" width="170" height="74" rx="10" fill="#FFFFFF" stroke="#B2D7C2"/>
+  <text x="671" y="420" class="metric" text-anchor="middle" fill="#278A58">SpatialGridIndex</text>
+  <text x="671" y="447" class="step-body" text-anchor="middle">격자 셀별 업소 배치</text>
+
+  <rect x="814" y="226" width="214" height="286" rx="18" fill="#FFF8E8" stroke="#D9B75D" stroke-width="1.6" class="shadow"/>
+  <circle cx="848" cy="262" r="20" fill="#B7791F"/>
+  <text x="848" y="269" class="step-number" text-anchor="middle">4</text>
+  <text x="878" y="269" class="step-title">1차 후보 축소</text>
+  <line x1="836" y1="292" x2="1006" y2="292" stroke="#E2D2A5"/>
+  <text x="836" y="327" class="step-body">반경을 포함하는 경계 사각형</text>
+  <text x="836" y="351" class="step-body">또는 사용자가 선택한 범위</text>
+  <rect x="836" y="390" width="170" height="74" rx="10" fill="#FFFFFF" stroke="#DFC987"/>
+  <text x="921" y="420" class="metric" text-anchor="middle" fill="#9A641B">Grid lookup</text>
+  <text x="921" y="447" class="step-body" text-anchor="middle">관련 셀만 탐색</text>
+
+  <rect x="1064" y="226" width="214" height="286" rx="18" fill="#FFF2ED" stroke="#DB9A7E" stroke-width="1.6" class="shadow"/>
+  <circle cx="1098" cy="262" r="20" fill="#C8643E"/>
+  <text x="1098" y="269" class="step-number" text-anchor="middle">5</text>
+  <text x="1128" y="269" class="step-title">2차 거리 검증</text>
+  <line x1="1086" y1="292" x2="1256" y2="292" stroke="#E8C5B5"/>
+  <text x="1086" y="327" class="step-body">경계 사각형 후보 각각의</text>
+  <text x="1086" y="351" class="step-body">구면 거리를 다시 계산</text>
+  <rect x="1086" y="390" width="170" height="74" rx="10" fill="#FFFFFF" stroke="#E2B49F"/>
+  <text x="1171" y="420" class="metric" text-anchor="middle" fill="#B65231">Haversine</text>
+  <text x="1171" y="447" class="step-body" text-anchor="middle">반경 1km 정확 필터</text>
+
+  <rect x="1314" y="226" width="222" height="286" rx="18" fill="#EEF5FD" stroke="#8CB8E8" stroke-width="1.6" class="shadow"/>
+  <circle cx="1348" cy="262" r="20" fill="#2F80ED"/>
+  <text x="1348" y="269" class="step-number" text-anchor="middle">6</text>
+  <text x="1378" y="269" class="step-title">결과 표시</text>
+  <line x1="1336" y1="292" x2="1514" y2="292" stroke="#C5D8EC"/>
+  <text x="1336" y="327" class="step-body">표·업종별 집계·지도 마커를</text>
+  <text x="1336" y="351" class="step-body">하나의 결과로 동기화</text>
+  <rect x="1336" y="390" width="178" height="74" rx="10" fill="#FFFFFF" stroke="#B7CEE5"/>
+  <text x="1425" y="420" class="metric" text-anchor="middle">EDT 갱신</text>
+  <text x="1425" y="447" class="step-body" text-anchor="middle">최신 요청만 반영</text>
+
+  <path d="M278 369 H314" class="flow"/>
+  <path d="M528 369 H564" class="flow"/>
+  <path d="M778 369 H814" class="flow"/>
+  <path d="M1028 369 H1064" class="flow"/>
+  <path d="M1278 369 H1314" class="flow"/>
+
+  <!-- 지도 상호작용 루프 -->
+  <rect x="64" y="566" width="864" height="242" rx="18" fill="#FFFFFF" stroke="#D1DCE6" stroke-width="1.5"/>
+  <text x="88" y="604" class="section-title">지도 상호작용에 따른 재조회</text>
+  <text x="88" y="631" class="step-body">범위 선택 중 발생하는 연속 이벤트를 묶어 불필요한 검색을 줄인다.</text>
+
+  <rect x="88" y="666" width="166" height="92" rx="12" fill="#EDF5FF" stroke="#91BCEB"/>
+  <text x="171" y="701" class="loop-title" text-anchor="middle">지도 조작</text>
+  <text x="171" y="729" class="loop-body" text-anchor="middle">이동 · 확대 · 범위 선택</text>
+
+  <rect x="302" y="666" width="166" height="92" rx="12" fill="#F5F1FC" stroke="#B7A5DE"/>
+  <text x="385" y="701" class="loop-title" text-anchor="middle">80ms debounce</text>
+  <text x="385" y="729" class="loop-body" text-anchor="middle">연속 이벤트 병합</text>
+
+  <rect x="516" y="666" width="166" height="92" rx="12" fill="#EFF8F3" stroke="#91C8A8"/>
+  <text x="599" y="701" class="loop-title" text-anchor="middle">비동기 범위 검색</text>
+  <text x="599" y="729" class="loop-body" text-anchor="middle">단일 Executor 처리</text>
+
+  <rect x="730" y="666" width="174" height="92" rx="12" fill="#EEF5FD" stroke="#91BCEB"/>
+  <text x="817" y="701" class="loop-title" text-anchor="middle">결과 교체</text>
+  <text x="817" y="729" class="loop-body" text-anchor="middle">최신 요청 번호만 반영</text>
+
+  <path d="M254 712 H302" class="loop"/>
+  <path d="M468 712 H516" class="loop"/>
+  <path d="M682 712 H730" class="loop"/>
+  <path d="M817 758 C817 790, 171 790, 171 758" class="loop"/>
+
+  <!-- 설계 효과 -->
+  <rect x="964" y="566" width="572" height="242" rx="18" fill="#FFFFFF" stroke="#D1DCE6" stroke-width="1.5"/>
+  <text x="988" y="604" class="section-title">설계 효과</text>
+  <text x="988" y="631" class="step-body">검색 정확도와 화면 응답성을 함께 확보하기 위한 세 가지 선택</text>
+
+  <rect x="988" y="662" width="164" height="116" rx="12" fill="#F4F6F8" stroke="#B9C5CF"/>
+  <rect x="988" y="662" width="164" height="7" rx="4" fill="#455A6B"/>
+  <text x="1070" y="704" class="callout-title" text-anchor="middle">메모리 절감</text>
+  <text x="1070" y="731" class="callout-body" text-anchor="middle">전국 전체가 아닌</text>
+  <text x="1070" y="753" class="callout-body" text-anchor="middle">선택 지역만 적재</text>
+
+  <rect x="1176" y="662" width="164" height="116" rx="12" fill="#EFF8F3" stroke="#91C8A8"/>
+  <rect x="1176" y="662" width="164" height="7" rx="4" fill="#278A58"/>
+  <text x="1258" y="704" class="callout-title" text-anchor="middle">검색 효율</text>
+  <text x="1258" y="731" class="callout-body" text-anchor="middle">격자 후보 축소 후</text>
+  <text x="1258" y="753" class="callout-body" text-anchor="middle">정확 거리 검증</text>
+
+  <rect x="1364" y="662" width="148" height="116" rx="12" fill="#EEF5FD" stroke="#91BCEB"/>
+  <rect x="1364" y="662" width="148" height="7" rx="4" fill="#2F80ED"/>
+  <text x="1438" y="704" class="callout-title" text-anchor="middle">UI 응답성</text>
+  <text x="1438" y="731" class="callout-body" text-anchor="middle">I/O는 Worker</text>
+  <text x="1438" y="753" class="callout-body" text-anchor="middle">화면은 EDT</text>
+
+  <path d="M671 512 V542 H599 V666" class="thread"/>
+  <text x="684" y="548" class="step-body" fill="#278A58">준비 완료 후 재사용</text>
+  <text x="800" y="882" class="caption" text-anchor="middle">그림 2. 지역별 지연 로딩과 2단계 공간 필터를 적용한 상권 검색 처리 과정</text>
+</svg>

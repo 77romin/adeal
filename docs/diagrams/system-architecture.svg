@@ -1,0 +1,202 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">EnjoyTrip 시스템 아키텍처</title>
+  <desc id="description">Java Swing 화면 계층에서 서비스, 데이터 처리 계층, 관광지·축제·상권·지도 데이터 원본으로 이어지는 구조와 비동기 처리 경계를 나타낸다.</desc>
+  <defs>
+    <style>
+      text { font-family: Pretendard, "Noto Sans KR", "Malgun Gothic", Arial, sans-serif; fill: #172B3A; }
+      .header-title { font-size: 36px; font-weight: 700; fill: #FFFFFF; letter-spacing: -0.6px; }
+      .header-subtitle { font-size: 18px; font-weight: 400; fill: #C5D4E3; }
+      .header-tag { font-size: 13px; font-weight: 700; fill: #D7E5F2; letter-spacing: 1.4px; }
+      .lane-title { font-size: 20px; font-weight: 700; fill: #FFFFFF; }
+      .lane-kicker { font-size: 12px; font-weight: 700; fill: #E9F0F7; letter-spacing: 1.1px; }
+      .card-title { font-size: 19px; font-weight: 700; letter-spacing: -0.25px; }
+      .card-body { font-size: 14px; font-weight: 400; fill: #4C5F6E; }
+      .actor-title { font-size: 22px; font-weight: 700; fill: #17324D; }
+      .actor-body { font-size: 14px; font-weight: 500; fill: #526879; }
+      .edge-label { font-size: 12px; font-weight: 700; fill: #526879; }
+      .legend { font-size: 14px; font-weight: 600; fill: #334D60; }
+      .caption { font-size: 15px; font-weight: 600; fill: #617384; }
+      .flow { fill: none; stroke: #526879; stroke-width: 2.2; marker-end: url(#arrow); }
+      .flow-branch { fill: none; stroke: #7B8D9B; stroke-width: 2; marker-end: url(#arrowSoft); }
+      .async { fill: none; stroke: #6750A4; stroke-width: 2.4; stroke-dasharray: 8 6; marker-end: url(#arrowPurple); }
+      .shadow { filter: url(#shadow); }
+    </style>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#102A43" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#526879"/>
+    </marker>
+    <marker id="arrowSoft" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7B8D9B"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6750A4"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="900" fill="#F7F9FC"/>
+  <rect width="1600" height="132" fill="#0B2239"/>
+  <rect x="0" y="128" width="1600" height="4" fill="#2F80ED"/>
+  <text x="64" y="63" class="header-title">EnjoyTrip 시스템 아키텍처</text>
+  <text x="64" y="101" class="header-subtitle">Java Swing 기반 관광지·축제·상권 통합 탐색</text>
+  <rect x="1310" y="45" width="226" height="42" rx="21" fill="#173A5E" stroke="#4D7194"/>
+  <text x="1423" y="71" class="header-tag" text-anchor="middle">SYSTEM ARCHITECTURE</text>
+
+  <!-- 사용자 -->
+  <rect x="48" y="174" width="190" height="596" rx="20" fill="#EEF4FA" stroke="#B8C9D8" stroke-width="1.5"/>
+  <circle cx="143" cy="270" r="46" fill="#D7E7F5" stroke="#5D83A8" stroke-width="2"/>
+  <circle cx="143" cy="255" r="14" fill="#5D83A8"/>
+  <path d="M113 300 C118 274, 168 274, 173 300 Z" fill="#5D83A8"/>
+  <text x="143" y="347" class="actor-title" text-anchor="middle">사용자</text>
+  <line x1="78" y1="372" x2="208" y2="372" stroke="#C4D2DE"/>
+  <text x="80" y="406" class="actor-body">관광지 검색·선택</text>
+  <text x="80" y="438" class="actor-body">축제 상세 조회</text>
+  <text x="80" y="470" class="actor-body">지도 탐색·범위 지정</text>
+  <rect x="72" y="651" width="142" height="72" rx="12" fill="#FFFFFF" stroke="#B8C9D8"/>
+  <text x="143" y="680" class="card-title" text-anchor="middle" font-size="16">입력 이벤트</text>
+  <text x="143" y="706" class="card-body" text-anchor="middle">클릭 · 드래그 · 휠</text>
+
+  <!-- 화면 계층 -->
+  <rect x="278" y="174" width="302" height="596" rx="20" fill="#EDF5FF" stroke="#A9C8F5" stroke-width="1.5"/>
+  <path d="M278 194 Q278 174 298 174 H560 Q580 174 580 194 V232 H278 Z" fill="#2F80ED"/>
+  <text x="300" y="198" class="lane-kicker">PRESENTATION</text>
+  <text x="300" y="222" class="lane-title">Swing 화면 계층</text>
+
+  <rect x="302" y="257" width="254" height="90" rx="14" fill="#FFFFFF" stroke="#7DB2F2" stroke-width="1.6" class="shadow"/>
+  <text x="322" y="287" class="card-title">TripInfoView</text>
+  <text x="322" y="314" class="card-body">관광지 검색 · 상세 · 기능 진입</text>
+  <text x="322" y="336" class="card-body">메인 화면과 현재 관광지 상태</text>
+
+  <rect x="302" y="382" width="254" height="90" rx="14" fill="#FFFFFF" stroke="#7DB2F2" stroke-width="1.6" class="shadow"/>
+  <text x="322" y="412" class="card-title">FestivalInfoView</text>
+  <text x="322" y="439" class="card-body">지역 축제 목록과 상세 정보</text>
+  <text x="322" y="461" class="card-body">시군구 우선 · 시도 확대</text>
+
+  <rect x="302" y="507" width="254" height="114" rx="14" fill="#FFFFFF" stroke="#7DB2F2" stroke-width="1.6" class="shadow"/>
+  <text x="322" y="537" class="card-title">CommercialAreaDialog</text>
+  <text x="322" y="564" class="card-body">상권 결과 표 · 업종별 집계</text>
+  <text x="322" y="586" class="card-body">CommercialMapCanvas</text>
+  <text x="322" y="608" class="card-body">지도 · 마커 · 말풍선 · 범위 선택</text>
+
+  <rect x="302" y="661" width="254" height="74" rx="12" fill="#DCEBFE" stroke="#87B6EE"/>
+  <text x="322" y="690" class="card-title" font-size="17">EDT</text>
+  <text x="322" y="716" class="card-body">이벤트 처리와 화면 갱신</text>
+
+  <!-- 서비스 계층 -->
+  <rect x="628" y="174" width="264" height="596" rx="20" fill="#F4F1FC" stroke="#C6B9E8" stroke-width="1.5"/>
+  <path d="M628 194 Q628 174 648 174 H872 Q892 174 892 194 V232 H628 Z" fill="#6750A4"/>
+  <text x="650" y="198" class="lane-kicker">APPLICATION</text>
+  <text x="650" y="222" class="lane-title">서비스 계층</text>
+
+  <rect x="650" y="257" width="220" height="90" rx="14" fill="#FFFFFF" stroke="#A68ED6" stroke-width="1.6" class="shadow"/>
+  <text x="670" y="287" class="card-title">TripService</text>
+  <text x="670" y="314" class="card-body">조건별 관광지 검색</text>
+  <text x="670" y="336" class="card-body">상세 정보 반환</text>
+
+  <rect x="650" y="382" width="220" height="90" rx="14" fill="#FFFFFF" stroke="#A68ED6" stroke-width="1.6" class="shadow"/>
+  <text x="670" y="412" class="card-title">FestivalService</text>
+  <text x="670" y="439" class="card-body">주소 기반 지역 매칭</text>
+  <text x="670" y="461" class="card-body">축제 범위 결정</text>
+
+  <rect x="650" y="507" width="220" height="114" rx="14" fill="#FFFFFF" stroke="#A68ED6" stroke-width="1.6" class="shadow"/>
+  <text x="670" y="537" class="card-title">CommercialAreaService</text>
+  <text x="670" y="564" class="card-body">반경·경계 범위 검색</text>
+  <text x="670" y="586" class="card-body">업종별 결과 집계</text>
+  <text x="670" y="608" class="card-body">좌표·검색 조건 검증</text>
+
+  <rect x="650" y="661" width="220" height="74" rx="12" fill="#E7E0F7" stroke="#B39DDD"/>
+  <text x="670" y="690" class="card-title" font-size="17">SwingWorker · Executor</text>
+  <text x="670" y="716" class="card-body">파일 I/O와 범위 조회</text>
+
+  <!-- 처리 계층 -->
+  <rect x="940" y="174" width="300" height="596" rx="20" fill="#EFF8F3" stroke="#A8D8BC" stroke-width="1.5"/>
+  <path d="M940 194 Q940 174 960 174 H1220 Q1240 174 1240 194 V232 H940 Z" fill="#278A58"/>
+  <text x="962" y="198" class="lane-kicker">PROCESSING</text>
+  <text x="962" y="222" class="lane-title">데이터 처리 계층</text>
+
+  <rect x="964" y="257" width="252" height="90" rx="14" fill="#FFFFFF" stroke="#70B891" stroke-width="1.6" class="shadow"/>
+  <text x="984" y="287" class="card-title">TripDao · SAX Parser</text>
+  <text x="984" y="314" class="card-body">관광지 XML 스트리밍 파싱</text>
+  <text x="984" y="336" class="card-body">목록 캐시와 조건 필터</text>
+
+  <rect x="964" y="382" width="252" height="90" rx="14" fill="#FFFFFF" stroke="#70B891" stroke-width="1.6" class="shadow"/>
+  <text x="984" y="412" class="card-title">FestivalDao · XLSX Parser</text>
+  <text x="984" y="439" class="card-body">압축 내부 XML 파싱</text>
+  <text x="984" y="461" class="card-body">RegionMatcher 주소 정규화</text>
+
+  <rect x="964" y="507" width="252" height="114" rx="14" fill="#FFFFFF" stroke="#70B891" stroke-width="1.6" class="shadow"/>
+  <text x="984" y="537" class="card-title">Commercial Repository</text>
+  <text x="984" y="564" class="card-body">지역별 지연 로딩</text>
+  <text x="984" y="586" class="card-body">SpatialGridIndex 후보 축소</text>
+  <text x="984" y="608" class="card-body">Haversine 거리 검증</text>
+
+  <rect x="964" y="650" width="252" height="85" rx="12" fill="#E0F1E7" stroke="#81C19C"/>
+  <text x="984" y="680" class="card-title" font-size="17">OpenStreetMapTileProvider</text>
+  <text x="984" y="706" class="card-body">비동기 다운로드 · 메모리/디스크 캐시</text>
+
+  <!-- 데이터 원본 -->
+  <rect x="1288" y="174" width="264" height="596" rx="20" fill="#F4F6F8" stroke="#C8D0D8" stroke-width="1.5"/>
+  <path d="M1288 194 Q1288 174 1308 174 H1532 Q1552 174 1552 194 V232 H1288 Z" fill="#455A6B"/>
+  <text x="1310" y="198" class="lane-kicker">DATA SOURCES</text>
+  <text x="1310" y="222" class="lane-title">데이터 원본</text>
+
+  <rect x="1312" y="257" width="216" height="90" rx="14" fill="#FFFFFF" stroke="#98A7B4" stroke-width="1.6" class="shadow"/>
+  <text x="1332" y="287" class="card-title">관광지 XML · 이미지</text>
+  <text x="1332" y="314" class="card-body">전국관광지정보표준데이터</text>
+  <text x="1332" y="336" class="card-body">로컬 이미지 자산</text>
+
+  <rect x="1312" y="382" width="216" height="90" rx="14" fill="#FFFFFF" stroke="#98A7B4" stroke-width="1.6" class="shadow"/>
+  <text x="1332" y="412" class="card-title">축제 XLSX</text>
+  <text x="1332" y="439" class="card-body">2026년 지역축제</text>
+  <text x="1332" y="461" class="card-body">개최계획 현황</text>
+
+  <rect x="1312" y="507" width="216" height="114" rx="14" fill="#FFFFFF" stroke="#98A7B4" stroke-width="1.6" class="shadow"/>
+  <text x="1332" y="537" class="card-title">지역별 상권 CSV</text>
+  <text x="1332" y="564" class="card-body">17개 시도 파일</text>
+  <text x="1332" y="586" class="card-body">상호·업종·주소·좌표</text>
+  <text x="1332" y="608" class="card-body">필요 지역만 메모리에 적재</text>
+
+  <rect x="1312" y="650" width="216" height="85" rx="12" fill="#FFF6E5" stroke="#D6A541" stroke-width="1.6"/>
+  <text x="1332" y="680" class="card-title" font-size="17">OpenStreetMap</text>
+  <text x="1332" y="706" class="card-body">Web Mercator 지도 타일</text>
+
+  <!-- 연결선 -->
+  <path d="M238 302 H302" class="flow-branch"/>
+  <path d="M238 427 H266 V302 H302" class="flow-branch"/>
+  <path d="M238 564 H258 V427 H302" class="flow-branch"/>
+  <text x="248" y="286" class="edge-label">검색·선택</text>
+
+  <path d="M556 302 H650" class="flow"/>
+  <path d="M556 427 H650" class="flow"/>
+  <path d="M556 564 H650" class="flow"/>
+  <text x="586" y="286" class="edge-label">요청</text>
+
+  <path d="M870 302 H964" class="flow"/>
+  <path d="M870 427 H964" class="flow"/>
+  <path d="M870 564 H964" class="flow"/>
+  <text x="899" y="286" class="edge-label">조회·가공</text>
+
+  <path d="M1216 302 H1312" class="flow"/>
+  <path d="M1216 427 H1312" class="flow"/>
+  <path d="M1216 564 H1312" class="flow"/>
+  <text x="1250" y="286" class="edge-label">읽기</text>
+
+  <path d="M556 593 C590 636, 605 680, 650 698" class="async"/>
+  <path d="M870 698 H964" class="async"/>
+  <path d="M1216 692 H1312" class="async"/>
+  <text x="580" y="653" class="edge-label">백그라운드 작업</text>
+  <text x="1239" y="676" class="edge-label">타일 요청</text>
+
+  <!-- 범례 -->
+  <rect x="48" y="794" width="1504" height="62" rx="14" fill="#FFFFFF" stroke="#D7DEE5"/>
+  <line x1="78" y1="825" x2="130" y2="825" class="flow"/>
+  <text x="146" y="831" class="legend">동기 요청·데이터 흐름</text>
+  <line x1="380" y1="825" x2="432" y2="825" class="async"/>
+  <text x="448" y="831" class="legend">비동기 I/O 경로</text>
+  <rect x="718" y="811" width="16" height="16" rx="3" fill="#DCEBFE" stroke="#87B6EE"/>
+  <text x="746" y="831" class="legend">EDT: 이벤트·화면 갱신</text>
+  <rect x="1020" y="811" width="16" height="16" rx="3" fill="#E7E0F7" stroke="#B39DDD"/>
+  <text x="1048" y="831" class="legend">Worker: 파일 로딩·공간 조회</text>
+  <text x="800" y="882" class="caption" text-anchor="middle">그림 1. EnjoyTrip의 계층형 구조와 관광지·축제·상권 데이터 흐름</text>
+</svg>
