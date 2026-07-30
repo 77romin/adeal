@@ -18,19 +18,19 @@
 
 ### 관광지 검색과 상세 정보
 
-![관광지 조회 메인 화면](./EnjoyTrip/docs/images/main-screen.png)
+![관광지 조회 메인 화면](./docs/images/main-screen.png)
 
 오른쪽 목록에서 관광지를 선택하면 왼쪽에 사진과 상세 정보가 표시됩니다. 검색 조건은 관광지명과 주소 중에서 고를 수 있으며, 선택한 관광지를 기준으로 하단의 `주변 축제 검색`, `주변상권 검색` 기능이 이어집니다.
 
 ### 주변 축제
 
-![정방폭포 주변 축제 조회 화면](./EnjoyTrip/docs/images/festival-screen.png)
+![정방폭포 주변 축제 조회 화면](./docs/images/festival-screen.png)
 
 정방폭포를 선택한 뒤 주변 축제를 조회한 화면입니다. 관광지와 같은 시군구의 축제를 먼저 찾고, 결과가 없으면 시도 전체로 범위를 넓힙니다. 오른쪽 목록에서 축제를 선택하면 왼쪽 상세 영역이 함께 바뀝니다.
 
 ### 주변 상권과 지도
 
-![정방폭포 주변 상권 지도 화면](./EnjoyTrip/docs/images/commercial-map-screen.png)
+![정방폭포 주변 상권 지도 화면](./docs/images/commercial-map-screen.png)
 
 정방폭포 중심 반경 1km의 상권을 조회한 화면입니다. 지도에는 관광지 위치, 상권 마커, 조회 반경이 함께 표시됩니다. 마커에 마우스를 올리면 해당 위치의 상호명과 업종, 주소를 확인할 수 있고, 오른쪽에서는 전체 결과와 업종별 개수를 볼 수 있습니다.
 
@@ -45,7 +45,7 @@
 
 ### 전체 아키텍처
 
-[![EnjoyTrip 시스템 아키텍처](./EnjoyTrip/docs/diagrams/system-architecture.svg)](./EnjoyTrip/docs/diagrams/system-architecture.svg)
+[![EnjoyTrip 시스템 아키텍처](./docs/diagrams/system-architecture.svg)](./EnjoyTrip/docs/diagrams/system-architecture.svg)
 
 화면, 서비스, 데이터 처리, 원본 데이터의 네 계층을 분리했습니다. 관광지·축제·상권은 같은 요청 흐름을 따르지만 각 데이터 형식에 맞는 파서와 검색 방식을 사용합니다. 실선은 내부 요청과 데이터 흐름, 점선은 지도 타일과 파일 조회처럼 백그라운드에서 처리하는 I/O 경로를 뜻합니다.
 
@@ -53,7 +53,7 @@
 
 ### 상권 공간 검색 파이프라인
 
-[![상권 공간 검색 파이프라인](./EnjoyTrip/docs/diagrams/commercial-search-pipeline.svg)](./EnjoyTrip/docs/diagrams/commercial-search-pipeline.svg)
+[![상권 공간 검색 파이프라인](./docs/diagrams/commercial-search-pipeline.svg)](./EnjoyTrip/docs/diagrams/commercial-search-pipeline.svg)
 
 전국 상권 파일을 모두 적재하지 않고 관광지가 속한 지역의 CSV만 최초 1회 읽습니다. 로딩한 업소는 `SpatialGridIndex`에 배치하고, 검색할 때는 경계 사각형으로 후보를 먼저 줄인 뒤 Haversine 거리로 반경 1km 안의 업소를 다시 검증합니다.
 
