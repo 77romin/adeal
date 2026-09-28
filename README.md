@@ -2,7 +2,10 @@
 
 관광지를 검색하고, 선택한 관광지의 주변 축제와 상권을 한 화면에서 확인하는 Java Swing 애플리케이션입니다.
 
-12팀 김강민, 김도연
+|팀명|팀장|팀원|
+|:---:|:---:|:---:|
+|<img src="./docs/logo/logo.png" width="100">|<img src="https://avatars.githubusercontent.com/77romin" width="100">|<img src="https://avatars.githubusercontent.com/tkv00" width="100">|
+|12팀 어딜|[김강민](https://github.com/77romin)|[김도연](https://github.com/tkv00)|
 
 ## 주요 기능
 
